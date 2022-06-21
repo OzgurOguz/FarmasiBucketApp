@@ -2,6 +2,7 @@
 using FarmasiBucketApp.Core.Dtos.Product;
 using FarmasiBucketApp.Core.Dtos.Shared;
 using FarmasiBucketApp.Core.Interfaces;
+using FarmasiBucketApp.Core.Interfaces.DatabaseInterfaces;
 using FarmasiBucketApp.Core.Models;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
@@ -16,9 +17,18 @@ namespace FarmasiBucketApp.Service
     public class ProductService : IProductService
     {
 
-        private readonly IMongoCollection<Product> _productCollection;
+        private readonly IMongoCollection<Product> _contactCollection;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
+
+        public ProductService(IMapper mapper, IDatabaseSettings dbSettings, IConfiguration configuration)
+        {
+            var client = new MongoClient(dbSettings.ConnectionString);
+            var db = client.GetDatabase(dbSettings.DatabaseName);
+            _productCollection = db.GetCollection<Product>(dbSettings.ProductCollectionName);
+            _mapper = mapper;
+            _configuration = configuration;
+        }
 
         public async Task<ResponseDto<List<ProductDto>>> GetAllAsync()
         {
