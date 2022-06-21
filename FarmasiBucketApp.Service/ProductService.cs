@@ -17,7 +17,7 @@ namespace FarmasiBucketApp.Service
     public class ProductService : IProductService
     {
 
-        private readonly IMongoCollection<Product> _contactCollection;
+        private readonly IMongoCollection<Product> _productCollection;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
